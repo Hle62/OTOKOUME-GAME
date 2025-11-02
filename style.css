@@ -8,7 +8,6 @@ const finalScoreElement = document.getElementById('final-score');
 const retryButton = document.getElementById('retry-button');
 
 // --- ゲーム設定 ---
-// ↓↓ ★この行がエラーの修正箇所です★ ↓↓
 const GAME_TIME = 20; // 制限時間（秒）
 
 // --- ゲーム用変数 ---
