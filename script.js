@@ -16,9 +16,7 @@ let timeLeft = GAME_TIME;
 let gameInterval; 
 let isGameActive = false; 
 
-// --- 関数の定義 ---
-
-// 1. ゲームを開始する関数
+// --- 関数の定義 (変更なし) ---
 function startGame() {
     score = 0;
     timeLeft = GAME_TIME;
@@ -28,15 +26,12 @@ function startGame() {
     isGameActive = true;
     resultScreen.style.display = 'none'; 
     target.style.display = 'block';      
-    
-    // ↓↓ ★追加: 枠外のボタンを隠す ↓↓
     retryButton.style.display = 'none'; 
 
     moveTarget();
     gameInterval = setInterval(updateTimer, 1000);
 }
 
-// 2. タイマーを更新する関数 (変更なし)
 function updateTimer() {
     timeLeft--; 
     timerElement.textContent = timeLeft;
@@ -46,7 +41,6 @@ function updateTimer() {
     }
 }
 
-// 3. ゲームを終了する関数
 function endGame() {
     isGameActive = false;
     clearInterval(gameInterval); 
@@ -54,12 +48,9 @@ function endGame() {
     finalScoreElement.textContent = score;
     resultScreen.style.display = 'flex'; 
     target.style.display = 'none';       
-    
-    // ↓↓ ★追加: 枠外のボタンを表示する ↓↓
     retryButton.style.display = 'block';
 }
 
-// 4. 画像を移動させる関数 (変更なし)
 function moveTarget() {
     const gameAreaWidth = gameArea.clientWidth;
     const gameAreaHeight = gameArea.clientHeight;
