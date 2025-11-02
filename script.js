@@ -10,47 +10,60 @@ const retryButton = document.getElementById('retry-button');
 // --- ゲーム設定 (変更なし) ---
 const GAME_TIME = 20;
 
-// --- ゲーム用変数 (変更なし) ---
+// --- ゲーム用変数 ---
 let score = 0;
 let timeLeft = GAME_TIME;
 let gameInterval; 
-let isGameActive = false; 
+let isGameActive = false; // ★ゲームが動作中か（タイマーが動いているか）
 
-// --- 関数の定義 (変更なし) ---
-function startGame() {
+// --- 関数の定義 ---
+
+// 1. ゲームを初期状態に準備する関数 (タイマーは開始しない)
+function initializeGame() {
+    // 各種リセット
     score = 0;
     timeLeft = GAME_TIME;
     scoreElement.textContent = score;
     timerElement.textContent = timeLeft;
     
-    isGameActive = true;
-    resultScreen.style.display = 'none'; 
-    target.style.display = 'block';      
-    retryButton.style.display = 'none'; 
+    // 状態の切り替え
+    isGameActive = false; // ★タイマー停止中
+    if (gameInterval) {
+        clearInterval(gameInterval); // 念のためタイマーを停止
+    }
+    
+    resultScreen.style.display = 'none'; // 結果画面を隠す
+    target.style.display = 'block';      // 画像を表示する
+    retryButton.style.display = 'none';  // ボタンを隠す
 
+    // 最初の画像を配置
     moveTarget();
-    gameInterval = setInterval(updateTimer, 1000);
 }
 
+// 2. タイマーを更新する関数（1秒ごとに呼ばれる）
 function updateTimer() {
-    timeLeft--; 
+    timeLeft--; // 時間を1減らす
     timerElement.textContent = timeLeft;
 
+    // もし残り時間が0になったら
     if (timeLeft <= 0) {
         endGame();
     }
 }
 
+// 3. ゲームを終了する関数
 function endGame() {
-    isGameActive = false;
-    clearInterval(gameInterval); 
+    isGameActive = false; // ★タイマー停止
+    clearInterval(gameInterval); // タイマーを停止
 
+    // 結果画面の表示
     finalScoreElement.textContent = score;
-    resultScreen.style.display = 'flex'; 
-    target.style.display = 'none';       
-    retryButton.style.display = 'block';
+    resultScreen.style.display = 'flex'; // 結果画面を表示
+    target.style.display = 'none';       // 画像を隠す
+    retryButton.style.display = 'block'; // ボタンを表示する
 }
 
+// 4. 画像を移動させる関数 (変更なし)
 function moveTarget() {
     const gameAreaWidth = gameArea.clientWidth;
     const gameAreaHeight = gameArea.clientHeight;
@@ -62,19 +75,35 @@ function moveTarget() {
     target.style.top = randomY + 'px';
 }
 
-// --- イベントリスナー (変更なし) ---
+// --- イベントリスナー（操作の受付） ---
+
+// 画像をクリックした時
 target.addEventListener('click', () => {
+    
+    // ★★★ 変更点 ★★★
+    // もしタイマーがまだ動いていなければ (isGameActive が false なら)
     if (!isGameActive) {
-        return; 
+        // これが最初のクリックなので、タイマーを開始する
+        isGameActive = true;
+        gameInterval = setInterval(updateTimer, 1000);
     }
+    // ★★★ 変更ここまで ★★★
+
+    // 以下の処理は、最初のクリックでも2回目以降でも実行される
+    
+    // スコアを増やす
     score++;
     scoreElement.textContent = score;
+
+    // 画像を移動
     moveTarget();
 });
 
+// リトライボタンをクリックした時
 retryButton.addEventListener('click', () => {
-    startGame(); 
+    initializeGame(); // ゲームを初期状態に戻す
 });
 
-// --- ゲームの開始 (変更なし) ---
-startGame();
+// --- ゲームの開始 ---
+// ページ読み込み時にゲームを初期状態にする
+initializeGame();
