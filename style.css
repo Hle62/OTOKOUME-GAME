@@ -1,0 +1,36 @@
+// 必要な要素を取得します
+const gameArea = document.getElementById('game-area');
+const target = document.getElementById('target');
+
+// ゲームエリアのサイズ（枠線内）を取得します
+const gameAreaWidth = gameArea.clientWidth;
+const gameAreaHeight = gameArea.clientHeight;
+
+// 画像のサイズ（CSSで指定した値）
+const targetWidth = 50;
+const targetHeight = 50;
+
+// 画像をクリックしたときの処理を定義します
+target.addEventListener('click', () => {
+    // moveTarget関数を呼び出して画像を移動させます
+    moveTarget();
+});
+
+// 画像をランダムな位置に移動させる関数
+function moveTarget() {
+    // 1. 新しいX座標（横）を計算します
+    // (エリアの幅 - 画像の幅) の範囲内でランダムな数値を生成
+    const randomX = Math.random() * (gameAreaWidth - targetWidth);
+
+    // 2. 新しいY座標（縦）を計算します
+    // (エリアの高さ - 画像の高さ) の範囲内でランダムな数値を生成
+    const randomY = Math.random() * (gameAreaHeight - targetHeight);
+
+    // 3. 画像の位置（CSS）を更新します
+    // 'px' という単位を付けて設定します
+    target.style.left = randomX + 'px';
+    target.style.top = randomY + 'px';
+}
+
+// ページが読み込まれたら、最初に1回画像を移動させます
+moveTarget();
