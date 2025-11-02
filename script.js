@@ -1,4 +1,4 @@
-// --- 要素の取得 ---
+// --- 要素の取得 (変更なし) ---
 const gameArea = document.getElementById('game-area');
 const target = document.getElementById('target');
 const scoreElement = document.getElementById('score');
@@ -7,42 +7,38 @@ const resultScreen = document.getElementById('result-screen');
 const finalScoreElement = document.getElementById('final-score');
 const retryButton = document.getElementById('retry-button');
 
-// --- ゲーム設定 ---
-const GAME_TIME = 20; // 制限時間（秒）
+// --- ゲーム設定 (変更なし) ---
+const GAME_TIME = 20;
 
-// --- ゲーム用変数 ---
+// --- ゲーム用変数 (変更なし) ---
 let score = 0;
 let timeLeft = GAME_TIME;
-let gameInterval; // タイマー処理を入れる変数
-let isGameActive = false; // ゲームが実行中か
+let gameInterval; 
+let isGameActive = false; 
 
 // --- 関数の定義 ---
 
 // 1. ゲームを開始する関数
 function startGame() {
-    // 各種リセット
     score = 0;
     timeLeft = GAME_TIME;
     scoreElement.textContent = score;
     timerElement.textContent = timeLeft;
     
-    // 状態の切り替え
     isGameActive = true;
-    resultScreen.style.display = 'none'; // 結果画面を隠す
-    target.style.display = 'block';      // 画像を表示する
+    resultScreen.style.display = 'none'; 
+    target.style.display = 'block';      
     
-    // (枠外ボタンの処理を削除)
+    // ↓↓ ★追加: 枠外のボタンを隠す ↓↓
+    retryButton.style.display = 'none'; 
 
-    // 最初の画像を配置
     moveTarget();
-
-    // 1秒ごとにタイマーを更新
     gameInterval = setInterval(updateTimer, 1000);
 }
 
-// 2. タイマーを更新する関数（1秒ごとに呼ばれる）
+// 2. タイマーを更新する関数 (変更なし)
 function updateTimer() {
-    timeLeft--; // 時間を1減らす
+    timeLeft--; 
     timerElement.textContent = timeLeft;
 
     if (timeLeft <= 0) {
@@ -53,36 +49,29 @@ function updateTimer() {
 // 3. ゲームを終了する関数
 function endGame() {
     isGameActive = false;
-    clearInterval(gameInterval); // タイマーを停止
+    clearInterval(gameInterval); 
 
-    // 結果画面の表示
     finalScoreElement.textContent = score;
-    resultScreen.style.display = 'flex'; // 結果画面を表示
-    target.style.display = 'none';       // 画像を隠す
+    resultScreen.style.display = 'flex'; 
+    target.style.display = 'none';       
     
-    // (枠外ボタンの処理を削除)
+    // ↓↓ ★追加: 枠外のボタンを表示する ↓↓
+    retryButton.style.display = 'block';
 }
 
-// 4. 画像を移動させる関数
+// 4. 画像を移動させる関数 (変更なし)
 function moveTarget() {
-    // エリアと画像のサイズを取得
     const gameAreaWidth = gameArea.clientWidth;
     const gameAreaHeight = gameArea.clientHeight;
     const targetWidth = target.clientWidth;
     const targetHeight = target.clientHeight;
-
-    // ランダムな座標を計算
     const randomX = Math.random() * (gameAreaWidth - targetWidth);
     const randomY = Math.random() * (gameAreaHeight - targetHeight);
-
-    // 画像の位置を更新
     target.style.left = randomX + 'px';
     target.style.top = randomY + 'px';
 }
 
-// --- イベントリスナー（操作の受付） ---
-
-// 画像をクリックした時
+// --- イベントリスナー (変更なし) ---
 target.addEventListener('click', () => {
     if (!isGameActive) {
         return; 
@@ -92,10 +81,9 @@ target.addEventListener('click', () => {
     moveTarget();
 });
 
-// リトライボタンをクリックした時
 retryButton.addEventListener('click', () => {
-    startGame(); // ゲームを再開
+    startGame(); 
 });
 
-// --- ゲームの開始 ---
+// --- ゲームの開始 (変更なし) ---
 startGame();
