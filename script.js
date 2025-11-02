@@ -1,12 +1,20 @@
 // --- 要素の取得 ---
-// ... (変更なし) ...
+const gameArea = document.getElementById('game-area');
+const target = document.getElementById('target');
+const scoreElement = document.getElementById('score');
+const timerElement = document.getElementById('timer');
+const resultScreen = document.getElementById('result-screen');
+const finalScoreElement = document.getElementById('final-score');
 const retryButton = document.getElementById('retry-button');
 
 // --- ゲーム設定 ---
-// ... (変更なし) ...
+const GAME_TIME = 20; // 制限時間（秒）
 
 // --- ゲーム用変数 ---
-// ... (変更なし) ...
+let score = 0;
+let timeLeft = GAME_TIME;
+let gameInterval; // タイマー処理を入れる変数
+let isGameActive = false; // ゲームが実行中か
 
 // --- 関数の定義 ---
 
@@ -23,8 +31,7 @@ function startGame() {
     resultScreen.style.display = 'none'; // 結果画面を隠す
     target.style.display = 'block';      // 画像を表示する
     
-    // ↓↓ ★外に出したボタンを隠す処理を追加 ↓↓
-    retryButton.style.display = 'none'; 
+    // (枠外ボタンの処理を削除)
 
     // 最初の画像を配置
     moveTarget();
@@ -35,7 +42,12 @@ function startGame() {
 
 // 2. タイマーを更新する関数（1秒ごとに呼ばれる）
 function updateTimer() {
-    // ... (変更なし) ...
+    timeLeft--; // 時間を1減らす
+    timerElement.textContent = timeLeft;
+
+    if (timeLeft <= 0) {
+        endGame();
+    }
 }
 
 // 3. ゲームを終了する関数
@@ -48,17 +60,42 @@ function endGame() {
     resultScreen.style.display = 'flex'; // 結果画面を表示
     target.style.display = 'none';       // 画像を隠す
     
-    // ↓↓ ★外に出したボタンを表示する処理を追加 ↓↓
-    retryButton.style.display = 'block';
+    // (枠外ボタンの処理を削除)
 }
 
 // 4. 画像を移動させる関数
 function moveTarget() {
-    // ... (変更なし) ...
+    // エリアと画像のサイズを取得
+    const gameAreaWidth = gameArea.clientWidth;
+    const gameAreaHeight = gameArea.clientHeight;
+    const targetWidth = target.clientWidth;
+    const targetHeight = target.clientHeight;
+
+    // ランダムな座標を計算
+    const randomX = Math.random() * (gameAreaWidth - targetWidth);
+    const randomY = Math.random() * (gameAreaHeight - targetHeight);
+
+    // 画像の位置を更新
+    target.style.left = randomX + 'px';
+    target.style.top = randomY + 'px';
 }
 
 // --- イベントリスナー（操作の受付） ---
-// ... (変更なし) ...
+
+// 画像をクリックした時
+target.addEventListener('click', () => {
+    if (!isGameActive) {
+        return; 
+    }
+    score++;
+    scoreElement.textContent = score;
+    moveTarget();
+});
+
+// リトライボタンをクリックした時
+retryButton.addEventListener('click', () => {
+    startGame(); // ゲームを再開
+});
 
 // --- ゲームの開始 ---
 startGame();
