@@ -1,25 +1,103 @@
-/* ゲームエリアのスタイル */
-#game-area {
-    width: 600px;
-    height: 400px;
-    border: 2px solid #333;
-    background-color: #f0f0f0;
-    position: relative; /* 画像を配置する基準点にする */
-    overflow: hidden; /* エリア外に画像がはみ出ないようにする */
-    margin: 20px;
-}
+// --- 要素の取得 ---
+const gameArea = document.getElementById('game-area');
+const target = document.getElementById('target');
+const scoreElement = document.getElementById('score');
+const timerElement = document.getElementById('timer');
+const resultScreen = document.getElementById('result-screen');
+const finalScoreElement = document.getElementById('final-score');
+const retryButton = document.getElementById('retry-button');
 
-/* 画像のスタイル */
-#target {
-    width: 50px;  /* 画像の幅 */
-    height: 50px; /* 画像の高さ */
-    position: absolute; /* game-areaを基準に自由に配置 */
-    cursor: pointer; /* マウスカーソルを指マークに */
+// --- ゲーム設定 ---
+const GAME_TIME = 20; // 制限時間（秒）
+
+// --- ゲーム用変数 ---
+let score = 0;
+let timeLeft = GAME_TIME;
+let gameInterval; // タイマー処理を入れる変数
+let isGameActive = false; // ゲームが実行中か
+
+// --- 関数の定義 ---
+
+// 1. ゲームを開始する関数
+function startGame() {
+    // 各種リセット
+    score = 0;
+    timeLeft = GAME_TIME;
+    scoreElement.textContent = score;
+    timerElement.textContent = timeLeft;
     
-    /* 最初の位置（JavaScriptで上書きされます）*/
-    top: 10px;
-    left: 10px;
+    // 状態の切り替え
+    isGameActive = true;
+    resultScreen.style.display = 'none'; // 結果画面を隠す
+    target.style.display = 'block';      // 画像を表示する
 
-    /* (任意)移動を滑らかにするアニメーション */
-    transition: top 0.2s ease, left 0.2s ease;
+    // 最初の画像を配置
+    moveTarget();
+
+    // 1秒ごとにタイマーを更新
+    gameInterval = setInterval(updateTimer, 1000);
 }
+
+// 2. タイマーを更新する関数（1秒ごとに呼ばれる）
+function updateTimer() {
+    timeLeft--; // 時間を1減らす
+    timerElement.textContent = timeLeft;
+
+    // もし残り時間が0になったら
+    if (timeLeft <= 0) {
+        endGame();
+    }
+}
+
+// 3. ゲームを終了する関数
+function endGame() {
+    isGameActive = false;
+    clearInterval(gameInterval); // タイマーを停止
+
+    // 結果画面の表示
+    finalScoreElement.textContent = score;
+    resultScreen.style.display = 'flex'; // 結果画面を表示
+    target.style.display = 'none';       // 画像を隠す
+}
+
+// 4. 画像を移動させる関数
+function moveTarget() {
+    // エリアと画像のサイズを取得
+    const gameAreaWidth = gameArea.clientWidth;
+    const gameAreaHeight = gameArea.clientHeight;
+    const targetWidth = target.clientWidth;
+    const targetHeight = target.clientHeight;
+
+    // ランダムな座標を計算
+    const randomX = Math.random() * (gameAreaWidth - targetWidth);
+    const randomY = Math.random() * (gameAreaHeight - targetHeight);
+
+    // 画像の位置を更新
+    target.style.left = randomX + 'px';
+    target.style.top = randomY + 'px';
+}
+
+// --- イベントリスナー（操作の受付） ---
+
+// 画像をクリックした時
+target.addEventListener('click', () => {
+    // ゲームが実行中でなければ何もしない
+    if (!isGameActive) {
+        return; 
+    }
+
+    // スコアを増やす
+    score++;
+    scoreElement.textContent = score;
+
+    // 画像を移動
+    moveTarget();
+});
+
+// リトライボタンをクリックした時
+retryButton.addEventListener('click', () => {
+    startGame(); // ゲームを再開
+});
+
+// --- ゲームの開始 ---
+startGame();

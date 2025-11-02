@@ -2,16 +2,27 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale-1.0">
-    <title>クリックゲーム</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>クリックゲーム（スコア＆タイマー版）</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
     <h1>画像クリックゲーム</h1>
 
+    <div id="info-bar">
+        スコア: <span id="score">0</span>
+        残り時間: <span id="timer">20</span> 秒
+    </div>
+
     <div id="game-area">
         <img src="otokoume.png" id="target" alt="クリック対象">
+
+        <div id="result-screen">
+            <h2>終了！</h2>
+            <p>あなたのスコア: <span id="final-score">0</span></p>
+            <button id="retry-button">もう一度遊ぶ</button>
+        </div>
     </div>
 
     <script src="script.js"></script>
